@@ -1,0 +1,192 @@
+
+answer = '_________'
+answer = [x for x in answer]
+coordinates = []
+# printing the 3x3 field
+def printing_tictac(answer):
+    print('---------')
+    print('|', answer[0], answer[1], answer[2], '|')
+    print('|', answer[3], answer[4], answer[5], '|')
+    print('|', answer[6], answer[7], answer[8], '|')
+    print('---------')
+
+printing_tictac(answer)
+
+# checking whether coordinates are within our range
+def check_for_right_input(coordinates):
+    numbers_for_coordinates = ['1', '2', '3']
+    for x in coordinates:
+        if x.isdigit() and int(x) > 3 or x.isdigit() and int(x) < 1:
+            print('Coordinates should be from 1 to 3!')
+            return False
+        elif x == 'exit':
+            return True
+        elif x not in numbers_for_coordinates:
+            print('You should enter numbers!')
+            return False
+        
+def complete_check_for_input():
+    coordinates = input('Enter the coordinates: ').split()
+    
+    while check_for_right_input(coordinates) is False:  #looping until we get valid coordinates 
+        coordinates = input('Enter the coordinates: ').split()
+    return coordinates
+        
+        
+# asking for coordinates
+def asking_for_coordinates():
+    #global coordinates
+    while True:
+        
+        coordinates = complete_check_for_input()
+        if coordinates == ['exit']:
+            break
+        while True:
+            if is_space_free(coordinates, answer) is True:
+                fill_up_answer_with_x(coordinates, answer)
+                break
+            else:
+                print('This cell is occupied! Choose another one!')
+                coordinates = complete_check_for_input()
+                if x_wins(answer) is True or o_wins(answer) is True or coordinates == ['exit']:
+                    break
+                elif is_space_free(coordinates, answer) is True:
+                    fill_up_answer_with_x(coordinates, answer)
+                    break
+               
+                
+        printing_tictac(answer)
+        
+        if x_wins(answer) is True:
+            print('X wins')
+            break
+        elif o_wins(answer) is True:
+            print('O wins')
+            break
+        elif '_' not in answer:
+            print('Draw')
+            break
+        
+        
+        coordinates = complete_check_for_input()
+        if coordinates == ['exit']:
+            break
+        while True:
+            if is_space_free(coordinates, answer) is True:
+                fill_up_answer_with_o(coordinates, answer)
+                break
+            else:
+                print('This cell is occupied! Choose another one!')
+                coordinates = complete_check_for_input()
+                if x_wins(answer) is True or o_wins(answer) is True or coordinates == ['exit']:
+                    break
+                if is_space_free(coordinates, answer) is True:
+                    fill_up_answer_with_o(coordinates, answer)
+                    break
+        
+        printing_tictac(answer)
+        if x_wins(answer) is True:
+            print('X wins')
+            break
+        elif o_wins(answer) is True:
+            print('O wins')
+            break
+        elif '_' not in answer:
+            print('Draw')
+            break
+     
+
+# filling coordinates with X
+def fill_up_answer_with_x(coordinates, answer):
+   if coordinates == ['1', '3'] and answer[0] == '_':
+        answer[0] = 'X'
+   elif coordinates == ['2', '3'] and answer[1] == '_':
+        answer[1] = 'X'
+   elif coordinates == ['3', '3'] and answer[2] == '_':
+        answer[2] = 'X'
+   elif coordinates == ['1', '2'] and answer[3] == '_':
+        answer[3] = 'X'
+   elif coordinates == ['2', '2'] and answer[4] == '_':
+        answer[4] = 'X' 
+   elif coordinates == ['3', '2'] and answer[5] == '_':
+        answer[5] = 'X'
+   elif coordinates == ['1', '1'] and answer[6] == '_':
+        answer[6] = 'X'
+   elif coordinates == ['2', '1'] and answer[7] == '_':
+        answer[7] = 'X'
+   elif coordinates == ['3', '1'] and answer[8] == '_':
+        answer[8] = 'X' 
+                
+# filling coordinates with O   
+def fill_up_answer_with_o(coordinates, answer):
+    if coordinates == ['1', '3'] and answer[0] == '_':
+        answer[0] = 'O'
+    elif coordinates == ['2', '3'] and answer[1] == '_':
+        answer[1] = 'O'
+    elif coordinates == ['3', '3'] and answer[2] == '_':
+        answer[2] = 'O'
+    elif coordinates == ['1', '2'] and answer[3] == '_':
+        answer[3] = 'O'
+    elif coordinates == ['2', '2'] and answer[4] == '_':
+        answer[4] = 'O' 
+    elif coordinates == ['3', '2'] and answer[5] == '_':
+        answer[5] = 'O'
+    elif coordinates == ['1', '1'] and answer[6] == '_':
+        answer[6] = 'O'
+    elif coordinates == ['2', '1'] and answer[7] == '_':
+        answer[7] = 'O'
+    elif coordinates == ['3', '1'] and answer[8] == '_':
+        answer[8] = 'O' 
+    
+
+#checking whether the cell is free
+def is_space_free(coordinates, answer):
+    if coordinates == ['1', '3'] and answer[0] == '_':
+        return True
+    elif coordinates == ['2', '3'] and answer[1] == '_':
+        return True
+    elif coordinates == ['3', '3'] and answer[2] == '_':
+        return True
+    elif coordinates == ['1', '2'] and answer[3] == '_':
+        return True
+    elif coordinates == ['2', '2'] and answer[4] == '_':
+        return True
+    elif coordinates == ['3', '2'] and answer[5] == '_':
+        return True
+    elif coordinates == ['1', '1'] and answer[6] == '_':
+        return True
+    elif coordinates == ['2', '1'] and answer[7] == '_':
+        return True
+    elif coordinates == ['3', '1'] and answer[8] == '_':
+        return True
+        
+
+
+
+def impossible():
+    amount_of_o = [o for o in answer if o == 'O']
+    amount_of_x = [x for x in answer if x == 'X']
+    if len(amount_of_x) - len(amount_of_o) >= 2 or len(amount_of_o) - len(amount_of_x) >= 2:
+       return True 
+def x_wins(answer):
+    if answer[0:3] == ['X', 'X', 'X'] or answer[3:6] == ['X', 'X', 'X'] or answer[6:9] == ['X', 'X', 'X']:
+        return True
+    elif answer[0] == answer[3] == answer[6] == 'X' or answer[1] == answer[4] == answer[7] == 'X' or answer[2] == answer[5] == answer[8]  == 'X':
+        return True
+    elif answer[2] == answer[4] == answer[6] == 'X' or answer[0] == answer[4] == answer[8] == 'X':
+        return True
+def o_wins(answer):
+    if answer[0:3] == ['O', 'O', 'O'] or answer[3:6] == ['O', 'O', 'O'] or answer[6:9] == ['O', 'O', 'O']:
+        return True
+    elif answer[0] == answer[3] == answer[6] == 'O' or answer[1] == answer[4] == answer[7] == 'O' or answer[2] == answer[5] == answer[8]  == 'O':
+        return True
+    elif answer[2] == answer[4] == answer[6] == 'O' or answer[0] == answer[4] == answer[8] == 'O':
+        return True
+    
+
+
+
+#let's start
+asking_for_coordinates()
+
+  
