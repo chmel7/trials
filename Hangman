@@ -1,0 +1,69 @@
+import random
+import string
+secret_word_list = ['frame', 'optimal', 'smart', 'delay', 'wail', 'competition', 'grotesque', 'aberrant', 'cruel', 'rainstorm', 'juggle', 'shallow', 'warm', 'simple', 'eggnog', 'daughter', 'hard', 'sidewalk', 'pedal', 'type', 'sparkling', 'authority', 'lick', 'yarn', 'volcano', 'allow', 'cherries', 'pumped', 'halting', 'devilish', 'glue', 'moldy', 'surround', 'unlock', 'low', 'lighten', 'relieved', 'hollow', 'brother', 'large', 'curl', 'bomb', 'sulky', 'fuel', 'useful', 'birth', 'irate', 'ritzy', 'simplistic', 'sudden', 'fantastic', 'bag', 'boot', 'door', 'oatmeal', 'quiet', 'power', 'ruddy', 'hilarious', 'room', 'tremble', 'experience', 'absurd', 'blushing', 'mountainous', 'snow', 'market', 'curtain', 'trousers', 'excite', 'unhealthy', 'bead', 'bomb', 'unwieldy', 'neck', 'filthy', 'berserk', 'political', 'number', 'white', 'soup', 'silky', 'robin', 'oval', 'maddening', 'name', 'snail', 'detect', 'tug', 'fuel', 'successful', 'rebel', 'colorful', 'jumpy', 'hot', 'dislike', 'reflective', 'early', 'silly', 'moldy', 'disgusting', 'kindly', 'practise', 'shrug', 'trucks', 'suspect', 'guess', 'canvas', 'divergent', 'level', 'adaptable', 'energetic', 'fallacious', 'minute', 'recess', 'believe', 'rail', 'stranger', 'regular', 'adhesive', 'arch', 'book', 'argue', 'tasty', 'weigh', 'worm', 'tank', 'quack', 'babies', 'mellow', 'natural', 'obese', 'wreck', 'ticket', 'gate', 'enchanting', 'tie', 'view', 'hospitable', 'daily', 'violet', 'pink', 'good', 'exuberant', 'beg', 'puncture', 'direction', 'direful', 'drain', 'moon', 'gifted', 'rub', 'avoid', 'credit', 'excite', 'harm', 'sable', 'gamy', 'venomous', 'teeny-tiny', 'drop', 'undesirable', 'quiet', 'poke', 'bored', 'undress', 'mark', 'narrow', 'fluttering', 'stale', 'enchanted', 'bell', 'painful', 'elegant', 'birthday', 'treatment', 'ugliest', 'untidy', 'best', 'wish', 'ragged', 'imperfect', 'unable', 'wacky', 'standing', 'edge', 'nifty', 'need', 'haircut', 'mouth', 'snake', 'painful', 'pleasure', 'possessive']  # not that secret though as you can see it 
+n = random.randint(0, (len(secret_word_list) - 1))
+secret_word = secret_word_list[n]
+showing_word = [x for x in '-' * (len(secret_word))]
+count = 0
+used_letters = set()
+
+
+print('H A N G M A N')
+      
+        
+def checking_for_right_input():
+    while True:
+        print()
+        print(''.join(showing_word))
+        letter = input('Input a letter: ')
+        if len(letter) > 1 :
+            print('You should input a single letter')
+            
+        elif letter not in string.ascii_lowercase:
+            print('It is not an ASCII lowercase letter')
+            
+        elif letter in used_letters:
+            print('You already typed this letter')
+            
+        else:
+            used_letters.add(letter)
+            return letter
+        
+def the_game_itself(secret_word, showing_word, count, used_letters):    
+    while count < 8: 
+        letter = checking_for_right_input()
+        if letter in showing_word:
+            print('No improvements')
+            count +=1
+            
+        elif letter in set(secret_word):
+            counter = 0
+            for x in secret_word:
+                if letter == x:
+                    showing_word[counter] = x  
+                counter += 1
+            
+            if set(showing_word) == set(secret_word):
+                print(''.join(showing_word))
+                print('You guessed the word!')
+                print('You survived!')
+                break
+                        
+        else:
+            print('No such letter in the word')
+            count +=1
+    else: 
+        print('You are hanged!')
+        
+
+def main_menu():
+    
+    while True:
+        menu = input('Type "play" to play the game, "exit" to quit: ')
+        if menu == 'exit':
+            break
+        if menu == 'play':
+           the_game_itself(secret_word, showing_word, count, used_letters)
+       
+main_menu()
+
