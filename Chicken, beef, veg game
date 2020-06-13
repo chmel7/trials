@@ -1,0 +1,94 @@
+
+"""
+@author: Kris
+
+Game 'Chicken, beef, veg'
+
+"""
+
+import random
+print('Hello there. Your computer has in mind 3 digits from 0 to 9 which do not repeat themselves. '\
+      'Your task is to guess these digits. So enter 3 random digits first and you will see 3 possible answers: '\
+      '1-3 chicken, 1-2 beef or veg. Chicken means that you guessed a digit, but it is not in the right place. '\
+       'Beef means that you guessed a digit and its place. Veg means that you didn\'t guess anything. Good luck!')
+# To make sure digits do not repeat themselves 
+def comp_num():
+     comp_numb1 = random.randint(0, 9)
+     comp_numb2 = random.randint(0, 9)
+     comp_numb3 = random.randint(0, 9)
+     while comp_numb1 == comp_numb2 or comp_numb1 == comp_numb3 or comp_numb2 == comp_numb3:
+         comp_numb1 = random.randint(0, 9)
+         comp_numb2 = random.randint(0, 9)
+         comp_numb3 = random.randint(0, 9)
+     return (comp_numb1, comp_numb2, comp_numb3)
+
+
+# Getting proper user's input
+def user():
+    user_inp = input('Enter 3 digits from 0 to 9: ')
+    if user_inp == 'exit':
+        return False
+    while (len(user_inp) != 3) or (user_inp.isdigit() is False):
+        pool_of_random = [102, 103, 104, 105, 106, 107, 108, 109, 123, 124, 126, 127, 128, 134, 135, 136, 137, 138, 140, 142, 143, 145, 146, 147, 148, 149, 150, 152, 153, 154, 157, 158, 159, 163, 164, 165, 169, 170, 172, 173, 175, 176, 179, 180, 182, 183, 184, 185, 189, 190, 193, 194, 195, 196, 197, 198, 201, 203, 204, 205, 206, 208, 209, 210, 213, 214, 215, 216, 217, 218, 219, 230, 231, 235, 236, 237, 238, 239, 240, 243, 245, 247, 248, 250, 251, 257, 258, 259, 260, 263, 264, 271, 274, 275, 276, 278, 280, 283, 285, 286, 287, 289, 290, 291, 293, 294, 296, 297, 298, 301, 302, 305, 306, 307, 308, 309, 310, 315, 317, 318, 319, 320, 325, 327, 328, 329, 340, 341, 345, 346, 348, 349, 350, 351, 352, 356, 360, 361, 362, 364, 365, 369, 372, 375, 378, 379, 380, 381, 382, 384, 385, 386, 387, 391, 392, 396, 401, 402, 405, 406, 407, 408, 410, 412, 413, 416, 417, 418, 419, 420, 421, 423, 425, 426, 427, 428, 429, 430, 431, 435, 436, 437, 438, 439, 450, 452, 453, 456, 459, 460, 462, 463, 465, 467, 468, 471, 472, 473, 475, 476, 478, 480, 481, 482, 483, 485, 487, 489, 490, 491, 492, 493, 498, 501, 502, 503, 504, 506, 507, 508, 509, 510, 516, 517, 518, 519, 520, 521, 523, 524, 526, 527, 528, 530, 531, 532, 534, 536, 538, 541, 543, 547, 548, 549, 560, 563, 564, 567, 568, 569, 571, 578, 579, 580, 582, 583, 586, 587, 589, 590, 591, 592, 593, 597, 598, 601, 602, 603, 604, 605, 607, 609, 610, 612, 613, 614, 615, 618, 619, 620, 621, 623, 624, 625, 628, 629, 630, 634, 635, 637, 641, 642, 643, 645, 647, 650, 651, 652, 654, 657, 658, 672, 674, 675, 678, 679, 680, 681, 682, 685, 687, 689, 690, 691, 694, 695, 697, 702, 703, 709, 712, 715, 716, 718, 719, 720, 721, 723, 724, 725, 726, 729, 730, 731, 732, 734, 735, 736, 738, 740, 741, 742, 743, 745, 746, 750, 751, 752, 754, 758, 759, 760, 761, 762, 763, 765, 768, 769, 780, 781, 782, 783, 785, 792, 793, 794, 796, 798, 803, 804, 805, 806, 807, 809, 812, 813, 814, 815, 816, 819, 820, 821, 823, 824, 825, 829, 830, 831, 832, 835, 837, 839, 840, 841, 842, 843, 845, 846, 849, 850, 851, 852, 853, 859, 860, 863, 864, 867, 869, 870, 871, 872, 876, 879, 890, 891, 892, 893, 895, 896, 897, 901, 902, 903, 904, 907, 908, 910, 912, 914, 915, 916, 917, 918, 920, 921, 923, 924, 925, 927, 928, 930, 931, 932, 934, 936, 937, 938, 940, 941, 942, 943, 945, 947, 950, 951, 952, 953, 954, 956, 957, 958, 960, 961, 963, 964, 965, 967, 970, 971, 972, 976, 978, 980, 981, 982, 983, 984, 985, 986, 987]
+        false_num = pool_of_random[random.randint(0, len(pool_of_random) - 1)]
+        user_inp = input('Come on. Enter 3 digits from 0 to 9.\ne.g. {} \nJust do it: '.format(false_num))
+    return list(user_inp)
+
+comp_num = comp_num()
+user_num = tuple([int(x) for x in user()])
+print(user_num)
+counter = 0
+def check_for_win(comp_num, user_num):
+    if comp_num == user_num:
+        print("Yes! You did it! You are the champion!")
+        return True
+    return False
+def check_for_beef(comp_num, user_num, counter):
+    common_numbers = tuple(set(comp_num) & set(user_num))
+    if len(common_numbers) > 0:
+        if comp_num[0] != user_num[0] and comp_num[1] != user_num[1] and comp_num[2] != user_num[2]:
+            return '0 beef'
+        if comp_num[0] == user_num[0]:
+            counter += 1
+        if comp_num[1] == user_num[1]:
+            counter += 1
+        if comp_num[2] == user_num[2]:
+            counter += 1
+        return '{} beef'.format(counter)
+    else:
+        return '0 beef'
+
+def check_for_chicken(comp_num, user_num):
+    common_numbers = tuple(set(comp_num) & set(user_num))
+    if check_for_beef(comp_num, user_num, counter) == '0 beef' and len(common_numbers) > 0:
+        return '{} chicken'.format(len(common_numbers))
+    elif len(common_numbers) > 0:
+        if check_for_beef(comp_num, user_num, counter) == '2 beef':
+            return '0 chicken'
+        if comp_num[0] == user_num[0]:
+            common_numbers = tuple(set(comp_num[1:]) & set(user_num[1:]))
+            return '{} chicken'.format(len(common_numbers))
+        if comp_num[1] == user_num[1]:
+            common_numbers = tuple(set(comp_num[0:3:2]) & set(user_num[0:3:2]))
+            return '{} chicken'.format(len(common_numbers))
+        if comp_num[2] == user_num[2]:
+            common_numbers = tuple(set(comp_num[:2]) & set(user_num[:2]))
+            return '{} chicken'.format(len(common_numbers))
+    else:
+        return '0 chicken'
+
+def checking(comp_num, user_num):
+    common_numbers = tuple(set(comp_num) & set(user_num))
+    if len(common_numbers) == 0:
+        print('veg')
+    else:
+        print('', check_for_beef(comp_num, user_num, counter), '\n', check_for_chicken(comp_num, user_num))
+
+
+    
+while check_for_win(comp_num, user_num) is False: 
+    checking(comp_num, user_num)
+    user_num = tuple([int(x) for x in user()])
+    print(user_num)
+    
+   
