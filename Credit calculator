@@ -1,0 +1,82 @@
+import math
+import sys
+
+args = sys.argv
+
+def arguments(args):
+    if len(args) != 5:
+        print('Incorrect parameters')
+        exit()
+    else:
+        args = [x.split('=') for x in args[1:]]
+        arguments = dict()
+        arguments = {args[0][0]: args[0][1], args[1][0]: float(args[1][1]), args[2][0]: float(args[2][1]), args[3][0]: float(args[3][1])}
+        if arguments['--type'] == 'diff' and '--payment' in arguments:
+            print('Incorrect parameters')
+            exit()
+        elif arguments['--type'] not in ['diff', 'annuity']:
+            print('Incorrect parameters')
+            exit()
+        for values in arguments.values():
+            if type(values) is float and values < 0:
+                print('Incorrect parameters')
+                exit()
+        return arguments
+def diff(arguments):
+    if arguments['--type'] == 'diff':
+        p = arguments['--principal']
+        n = int(arguments['--periods'])
+        i = (arguments['--interest'] / (100 * 12))
+        overpayment = []
+        for m in range(1, n+1):
+            diff = p/n + i * (p - (p * (m - 1)) / n) 
+            print('Month {0}: paid out {1}'.format(m, math.ceil(diff)))
+            overpayment.append(math.ceil(diff))
+        overpayment = sum(overpayment) - p
+        print('Overpayment =', int(overpayment))
+        
+def annuity(arguments):
+    if '--periods' not in arguments:
+        principal = arguments['--principal']
+        monthly_payment = float(arguments['--payment'])
+        interest = float(arguments['--interest'])
+        nominal_int_rate = interest / (100 * 12)
+        count_of_periods = math.ceil(math.log(monthly_payment / (monthly_payment - (nominal_int_rate * principal)), nominal_int_rate + 1))
+        if count_of_periods == 1:
+            print('You need 1 month to repay this credit!')
+        elif 1 < count_of_periods < 12:
+            print('You need', count_of_periods, 'months to repay this credit!')
+        elif count_of_periods == 12:
+            print('You need 1 year to repay this credit!')
+        else:
+            years = count_of_periods // 12
+            months = count_of_periods - years * 12
+            print('You need {} years and {} months to repay this credit!'.format(years, months) if count_of_periods % 12 != 0 else 'You need '+str(years)+' years to repay this credit!')
+        overpayment = (monthly_payment * count_of_periods) - principal
+        print('Overpayment =', int(overpayment))
+    elif '--payment' not in arguments:
+        principal = arguments['--principal']
+        count_of_periods = int(arguments['--periods'])
+        interest = float(arguments['--interest'])
+        nominal_int_rate = interest / (100 * 12)
+        c, i, p = (count_of_periods, (interest / (100 * 12)), principal)
+        a = p * ((i * (1 + i) **c) / ((1 + i) ** c - 1))
+        print('Your annuity payment = {}!'.format(math.ceil(a)))
+        overpayment = (math.ceil(a) * count_of_periods) - principal
+        print('Overpayment =', math.ceil(overpayment))
+    elif '--principal' not in arguments:    
+        monthly_payment = float(arguments['--payment'])
+        count_of_periods = int(arguments['--periods'])
+        interest = float(arguments['--interest'])
+        m, c, i = (monthly_payment, count_of_periods, (interest / (100 * 12)))
+        p = m / (( i * (1 + i) ** c) / ((1 + i) ** c - 1))
+        print('Your credit principal = {}!'.format(math.floor(p)))
+        overpayment = (m * c) - p
+        print('Overpayment =', math.ceil(overpayment))
+def main():
+    ar = arguments(args)
+    if ar['--type'] == 'diff':
+        diff(ar)
+    elif ar['--type'] == 'annuity':
+        annuity(ar)
+main()
