@@ -1,0 +1,117 @@
+
+from sqlalchemy import create_engine
+from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+from datetime import datetime, timedelta
+
+
+today = datetime.today()
+engine = create_engine('sqlite:///todo.db?check_same_thread=False')
+Base = declarative_base()
+
+
+class Task(Base):
+    __tablename__ = 'task'
+    id = Column(Integer, primary_key=True)
+    task = Column(String(500))
+    deadline = Column(Date)
+
+    def __repr__(self):
+        return "<Task(id='%s', task='%s', deadline='%s')>" % (
+                                self.id, self.task, self.deadline)
+
+
+def add_task():
+    new_t = input('Enter task\n')
+    new_deadline = datetime.strptime(input('Enter deadline\n'), '%Y-%m-%d')
+    new_row = Task(task=new_t, deadline=new_deadline)
+    session.add(new_row)
+    session.commit()
+    print('The task has been added!')
+
+
+def todays_tasks(today):
+    today_day = session.query(Task).filter(Task.deadline == today.date()).all()
+    print('Today '+today.strftime('%d %b')+':')
+    if len(today_day) > 0:
+        for x, y in enumerate(today_day):
+            print('{}. {}'.format(x+1, today_day[x].task))
+    else:
+        print('Nothing to do!')
+
+
+def weekstasks():
+    n = 0
+    print()
+    while n < 7:
+        week = today + timedelta(days=n)
+        print(week.strftime('%A %d %b:'))
+        this_day = session.query(Task).filter(Task.deadline == week.date()).all()
+        try:
+            if len(this_day) >= 1 and (week.date() == this_day[0].deadline):
+                for x in range(len(this_day)):
+                    print(this_day[x].task)
+            else:
+                print('Nothing to do!')
+        except (IndexError, TypeError):
+            pass
+        n += 1
+        print()
+
+
+def all_tasks():
+    rows = session.query(Task).order_by(Task.deadline).all()
+    for x in range(len(rows)):
+        print('{}. {}. {}'.format(x+1, rows[x].task, rows[x].deadline.strftime('%d %b')))
+
+
+def missed_tasks(today):
+    rows = session.query(Task).filter(Task.deadline < today.date()).order_by(Task.deadline).all()
+    print('Missed tasks:')
+    if len(rows) > 0:
+        for x in range(len(rows)):
+            print('{}. {}. {}'.format(x+1, rows[x].task, rows[x].deadline.strftime('%d %b')))
+    else:
+        print('Nothing is missed!')
+    print()
+
+
+def delete():
+    print('Choose the number of the task you want to delete:')
+    rows = session.query(Task).order_by(Task.deadline).all()
+    for x in range(len(rows)):
+        print('{}. {}. {}'.format(x+1, rows[x].task, rows[x].deadline.strftime('%d %b')))
+    number = int(input())
+    specific_row = rows[number - 1]
+    session.delete(specific_row)
+    session.commit()
+    print('The task has been deleted!')
+
+
+Base.metadata.create_all(engine)  
+Session = sessionmaker(bind=engine)  
+session = Session()
+
+
+if __name__ == '__main__':
+    print("1) Today's tasks\n2) Week's tasks\n3) All tasks\n4) Missed tasks\n5) Add task\n6) Delete task\n0) Exit")
+    choice = input()
+    while choice != '0':
+        if choice == '1':
+            todays_tasks(today)
+        elif choice == '2':
+            weekstasks()
+        elif choice == '3':
+            all_tasks()
+        elif choice == '4':
+            missed_tasks(today)
+        elif choice == '5':
+            add_task()
+        elif choice == '6':
+            delete()
+        print("1) Today's tasks\n2) Week's tasks\n3) All tasks\n4) Missed tasks\n5) Add task\n6) Delete task\n0) Exit")
+
+        choice = input()
+    print('Bye!')
